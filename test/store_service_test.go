@@ -19,12 +19,7 @@ type B struct {
 }
 
 func (b *B) Init(ctx context.Context) (*gobs.ServiceLifeCycle, error) {
-	return &gobs.ServiceLifeCycle{
-		Deps: []gobs.IService{&A{}},
-		OnSetup: func(ctx context.Context, deps gobs.Dependencies) error {
-			return deps.Assign(&b.A)
-		},
-	}, nil
+	return gobs.GenerateSetupConfig(nil, &b.A)
 }
 
 var _ gobs.IService = (*C)(nil)
@@ -35,12 +30,7 @@ type C struct {
 }
 
 func (c *C) Init(ctx context.Context) (*gobs.ServiceLifeCycle, error) {
-	return &gobs.ServiceLifeCycle{
-		Deps: []gobs.IService{&A{}, &B{}},
-		OnSetup: func(ctx context.Context, deps gobs.Dependencies) error {
-			return deps.Assign(&c.A, &c.B)
-		},
-	}, nil
+	return gobs.GenerateSetupConfig(nil, &c.A, &c.B)
 }
 
 var _ gobs.IService = (*D)(nil)
@@ -51,11 +41,5 @@ type D struct {
 }
 
 func (d *D) Init(ctx context.Context) (*gobs.ServiceLifeCycle, error) {
-	return &gobs.ServiceLifeCycle{
-		Deps: []gobs.IService{&B{}, &C{}},
-		OnSetup: func(ctx context.Context, deps gobs.Dependencies) error {
-			deps.Assign(&d.B, &d.C)
-			return nil
-		},
-	}, nil
+	return gobs.GenerateSetupConfig(nil, &d.B, &d.C)
 }

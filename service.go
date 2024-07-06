@@ -153,7 +153,8 @@ func (sb *Service) Run(ctx context.Context, ss common.ServiceStatus) (err error)
 	case common.StatusSetup:
 		if sb.OnSetup != nil {
 			err = sb.OnSetup(ctx, sb.Deps)
-		} else if s, ok := sb.instance.(IServiceSetup); ok {
+		}
+		if s, ok := sb.instance.(IServiceSetup); ok {
 			err = s.Setup(ctx, sb.Deps)
 		} else {
 			sb.Log("Service %s does not implement IServiceSetup", logKey)
@@ -161,7 +162,8 @@ func (sb *Service) Run(ctx context.Context, ss common.ServiceStatus) (err error)
 	case common.StatusStart:
 		if sb.OnStart != nil {
 			err = sb.OnStart(ctx)
-		} else if s, ok := sb.instance.(IServiceStart); ok {
+		}
+		if s, ok := sb.instance.(IServiceStart); ok {
 			err = s.Start(ctx)
 		} else {
 			sb.Log("Service %s does not implement IServiceStart", logKey)
@@ -169,7 +171,8 @@ func (sb *Service) Run(ctx context.Context, ss common.ServiceStatus) (err error)
 	case common.StatusStop:
 		if sb.OnStop != nil {
 			err = sb.OnStop(ctx)
-		} else if s, ok := sb.instance.(IServiceStop); ok {
+		}
+		if s, ok := sb.instance.(IServiceStop); ok {
 			err = s.Stop(ctx)
 		} else {
 			sb.Log("Service %s does not implement IServiceStop", logKey)
